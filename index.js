@@ -19,14 +19,17 @@ const openCartButton = document.querySelector("#openCart");
 const closeCartButton = document.querySelector("#closeCart");
 
 async function getData(category, sortType) {
-  const response = await fetch(
-    `http://localhost:3000/products${category ? "?" + `category=${category}` : ""}`
-  );
-  const data = await response.json();
-  allProducts = data;
-  displayData(data, sortType);
-}
-
+    try {
+      const response = await fetch(
+        `http://localhost:3000/products${category ? "?" + `category=${category}` : ""}`
+      );
+      const data = await response.json();
+      allProducts = data;
+      displayData(data, sortType);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
 function sortProducts(products, sortType) {
   return products.sort((a, b) => {
     if (sortType === "cheaper") {
@@ -149,3 +152,9 @@ function displayCart() {
   });
 
 }
+
+const searchString = event.target.value.trim().toLowerCase();
+const filteredProducts = allProducts.filter((product) =>
+  product.title.toLowerCase().includes(searchString)
+);
+displayData(filteredProducts);
